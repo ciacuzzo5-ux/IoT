@@ -11,3 +11,4 @@ from umqttsimple import MQTTClient
 from machine import Pin, I2C
 
 #import delle variabili definite in boot.py (ip broker
+while True:
