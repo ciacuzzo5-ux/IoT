@@ -2,7 +2,9 @@ import network
 import time
 import machine
 from umqtt.simple import MQTTClient
-from mpu6050 import MPU6050
+from MPU6050 import MPU6050         #ACCELEROMETRO
+from TCRT5000 import TCRT5000       #INFRAROSSI
+from HCSR04 import HCSR04           #DISTANZA
 import ssd1306
 import framebuf
 
@@ -10,6 +12,7 @@ import framebuf
 WIFI_NAME = 'iPhone di Chiara'
 WIFI_PASSWORD = '23032004'
 
+#CONFIGUARAZIONE MQTT
 MQTT_BROKER = "172.19.159.125"      #IP PC
 MQTT_CLIENT_ID = "esp32_caveau"
 MQTT_TOPIC_STATUS = b"caveau/status"
@@ -88,14 +91,28 @@ logo = bytearray([
 ])
 
 #Tastierino
-KEYPAD_ROW_PINS = [13, 12, 14, 27]
-KEYPAD_COL_PINS = [26, 25, 33, 32]
+# Matrice tasti fisici
+KEYS = [
+    ["1","2","3","A"],
+    ["4","5","6","B"],
+    ["7","8","9","C"],
+    ["*","0","#","D"]
+]
 
-KEYPAD_MAP = [
-    ['1','2','3','A'],
-    ['4','5','6','B'],
-    ['7','8','9','C'],
-    ['*','0','#','D']
+# Pin ESP32 collegati alle righe fisiche del tastierino (output)
+rows = [
+    Pin(27, Pin.OUT),  # R1-8
+    Pin(14, Pin.OUT),  # R2-7
+    Pin(12, Pin.OUT),  # R3-6
+    Pin(13, Pin.OUT)   # R4-5
+]
+
+# Pin ESP32 collegati alle colonne fisiche del tastierino (input_pullup)
+cols = [
+    Pin(26, Pin.IN, Pin.PULL_UP),  # C1-4
+    Pin(25, Pin.IN, Pin.PULL_UP),  # C2-3
+    Pin(33, Pin.IN, Pin.PULL_UP),  # C3-2
+    Pin(32, Pin.IN, Pin.PULL_UP)   # C4-1
 ]
 
 #STATI DEL CAVEAU
@@ -128,8 +145,8 @@ def servo_open():
 def servo_close():
     servo_set_angle(0)    # posizione "chiuso"
 
-# IR SENSOR
-ir_sensor = machine.Pin(19, machine.Pin.IN)
+# IR - TCRT5000 SENSOR
+sensor_ir = TCRT5000(pin=14, invert=True)
 
 # I2C, OLED 
 i2c = machine.I2C(0, scl=machine.Pin(22),
@@ -148,38 +165,41 @@ def oled_show_logo():
 row_pins = [machine.Pin(p, machine.Pin.OUT) for p in KEYPAD_ROW_PINS]
 col_pins = [machine.Pin(p, machine.Pin.IN, machine.Pin.PULL_DOWN) for p in KEYPAD_COL_PINS]
 
-def scan_keypad():
-    """Ritorna il tasto premuto (o None se nessuno)"""
-    for r, row in enumerate(row_pins):
-        row.value(1)       # attivo una riga
-        for c, col in enumerate(col_pins):
-            if col.value() == 1:   # se su quella colonna arriva tensione
-                key = KEYPAD_MAP[r][c]   
-                row.value(0)
-                return key    #tasto premuto
-        row.value(0)
+def read_keypad():
+    for r in range(4):
+        # Disattiva tutte le righe
+        for rr in rows:
+            rr.value(1)
+        # Attiva solo la riga corrente
+        rows[r].value(0)
+        # Controlla le colonne
+        for c in range(4):
+            if cols[c].value() == 0:  # Tasto premuto
+                time.sleep_ms(200)     # Anti-rimbalzo
+                return KEYS[r][c]
     return None
 
 #WI-FI + MQTT
 
 # Connessione al wi-fi
-def connect_wifi():
-    oled_show("Connessione WiFi")            #scrivo sull'oled la scritta di connessione
-    led_blue.value(0)                        #all'inizio il led è spento
-    wlan = network.WLAN(network.STA_IF)      #oggetto wlanv-> interfaccia wi-fi esp32 in modalità client -> serve per collegarsi al router
-    wlan.active(True)                        #attiva fisicamente la scheda wi-fi dell'esp
-    wlan.connect(WIFI_NAME, WIFI_PASSWORD)   #avvia la connessione alla rete wi-fi indicata
+def connect_wifi(timeout=10):
+    oled_show("Connessione WiFi")
+    led_blue.value(0)
+    wlan = network.WLAN(network.STA_IF)
+    wlan.active(True)
+    wlan.connect(WIFI_NAME, WIFI_PASSWORD)
 
-    #ciclo per connettersi al wi-fi
-    while not wlan.isconnected():  #Finchè isconnected()==FALSE si ripete il ciclo
-        #Il led blu lampeggia mentre il microcontrollore si connette
+    start_time = time.time()
+    while not wlan.isconnected():
         led_blue.value(1)
         time.sleep(0.2)
         led_blue.value(0)
         time.sleep(0.2)
+        if time.time() - start_time > timeout:
+            oled_show("Connessione fallita")
+            return None
 
-    #L'esp è connessa al wi-fi
-    led_blue.value(1)  # fisso = connesso -> led acceso per tutta la sessione
+    led_blue.value(1)
     oled_show("WiFi connesso")
     return wlan
 
