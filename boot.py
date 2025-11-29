@@ -1,3 +1,7 @@
+# boot.py viene eseguito automaticamente all'avvio del microcontrollore
+# Serve a configurare impostazioni di base (Wi-Fi, GPIO, periferiche) 
+# Viene eseguito prima dell'esecuzione del programma principale in main.py
+
 import network
 import machine
 import esp
@@ -12,27 +16,14 @@ gc.collect()
 WIFI_NAME = 'iPhone di Chiara'
 WIFI_PASSWORD = '23032004'
 
-def connect_wifi():
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    wlan.connect(WIFI_NAME, WIFI_PASSWORD)
-
-    while not wlan.isconnected():
-        pass
-    
-    return wlan
-
-WLAN = connect_wifi()
-
-# 3) CONFIGURAZIONE MQTT (SOLO COSTANTI)
+# 3) CONFIGURAZIONE MQTT 
 MQTT_BROKER = "172.19.159.125"
 MQTT_CLIENT_ID = "esp32_caveau"
 
 # Topic PUB
 MQTT_TOPIC_STATUS = b"caveau/status"
 MQTT_TOPIC_EVENTS = b"caveau/events"
-MQTT_TOPIC_COMMAND = b"caveau/cmd"
-
+MQTT_TOPIC_COMMAND = b"caveau/commands"
 
 # 4) COSTANTI DEL PROGETTO (SENZA LOGICA)
 SECRET_CODE = "2004"
@@ -47,7 +38,6 @@ STATE_ALARM = 2          # allarme attivo
 MOVEMENT_THRESHOLD = 8000
 
 # 5) PIN HARDWARE (SOLO DEFINIZIONE)
-
 # LED e buzzer
 LED_RED_PIN    = 15
 LED_GREEN_PIN  = 2
