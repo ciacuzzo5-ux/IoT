@@ -357,3 +357,4 @@ while True:
 # - HC-SR04: se distanza < 10 cm :  ALLARME DISTANZA
 # - MQTT: pubblica stati ed eventi sui topic definiti nel boot
 # - Stati: ARMATO, SBLOCCATO, ALLARME
+###########
