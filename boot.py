@@ -18,6 +18,8 @@ MQTT_CLIENT_ID = "esp32_caveau"
 MQTT_TOPIC_STATUS = b"caveau/status"
 MQTT_TOPIC_EVENTS = b"caveau/events"
 
+led=Pin(4, Pin.OUT)
+
 #CODICE 
 SECRET_CODE = "2004"
 UNLOCK_DOOR = 10 #secondi porta aperta
