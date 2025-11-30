@@ -51,7 +51,8 @@ SERVO_PIN = 18
 ROWS_PINS = [27, 14, 12, 13]
 COLS_PINS = [26, 25, 33, 32]
 
-# Sensori
+# Tasto di RESET
+RESET_PIN = 34
 # Sensore TCRT5000
 IR_SENSOR_PIN = 14
 
