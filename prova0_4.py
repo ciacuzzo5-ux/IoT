@@ -93,16 +93,13 @@ def system_reset():
     # 3. Porta chiusa
     servo_angle(0)
 
-    # 4. Messaggio OLED (se disponibile)
+    # 4. Mostra schermata di RESET usando la tua funzione oled_show()
     try:
-        oled.fill(0)
-        oled.text("RESET -", 20, 20)
-        oled.text("Riavvio...", 10, 40)
-        oled.show()
+        oled_show("RESET", "Riavvio...")
     except:
-        pass  # se OLED non è disponibile, ignoriamo
+        pass  # se OLED non è disponibile, continuiamo comunque
 
-    # 5. Piccolo ritardo
+    # 5. Piccolissimo delay per permettere la visualizzazione
     time.sleep(0.4)
 
     # 6. Reset hardware totale dell’ESP32
