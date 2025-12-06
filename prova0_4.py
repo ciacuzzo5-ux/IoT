@@ -96,14 +96,14 @@ def system_reset():
     # 4. Messaggio OLED (se disponibile)
     try:
         oled.fill(0)
-        oled.text("RESET -", 20, 20)
+        oled.text("RESET!", 20, 20)
         oled.text("Riavvio...", 10, 40)
         oled.show()
     except:
         pass  # se OLED non è disponibile, ignoriamo
 
     # 5. Piccolo ritardo
-    time.sleep(0.4)
+    time.sleep_ms(6000)
 
     # 6. Reset hardware totale dell’ESP32
     machine.reset()
@@ -229,8 +229,9 @@ if __name__ == "__main__":
         # controllo il pulsante reset
         if reset_button.value() == 0: # pulsante premuto
             time.sleep_ms(50) # debounce
-            if reset_button.value() == 0:
+            if reset_button.value() == 1:
                 system_reset()
+             
         # A) CONTROLLO SENSORI (Solo se l'allarme è ATTIVO)
         if accel_active:
             
