@@ -13,8 +13,8 @@ from keypad import Keypad
 # 1. CONFIGURAZIONE 
 
 # WI-FI 
-WIFI_NAME = "iPhone di Chiara"       
-WIFI_PASSWORD = "23032004"           
+WIFI_NAME = "iPhone di Chiara"        
+WIFI_PASSWORD = "23032004"            
 
 # PIN E HARDWARE 
 I2C_SDA = 21
@@ -55,8 +55,10 @@ led_blue = Pin(LED_BLUE_PIN, Pin.OUT); led_blue.value(0)
 led_red = Pin(LED_RED_PIN, Pin.OUT)
 led_green = Pin(LED_GREEN_PIN, Pin.OUT)
 
-# BUZZER
-buzzer = PWM(Pin(BUZZER_PIN)); buzzer.duty(0)
+# BUZZER (CONFIGURATO COME PWM)
+# Qui viene inizializzato il PWM sul pin del buzzer
+buzzer = PWM(Pin(BUZZER_PIN))
+buzzer.duty(0) # Inizia spento (duty cycle a 0)
 
 # SERVO
 servo = PWM(Pin(SERVO_PIN), freq=50)
@@ -79,22 +81,33 @@ def led_blink(led, interval=0.2):
     led.value(1); time.sleep(interval); led.value(0); time.sleep(interval)
 
 def connect_wifi(timeout=15):
-    wlan = network.WLAN(network.STA_IF)
-    wlan.active(True)
-    wlan.connect(WIFI_NAME, WIFI_PASSWORD)
-    start_time = time.time()
+    # Preparazione e Avvio
+    wlan = network.WLAN(network.STA_IF)  #Imposta il chip Wi-Fi in modalità Station (Stazione)
+    wlan.active(True)   #Accende fisicamente la radio Wi-Fi
+    wlan.connect(WIFI_NAME, WIFI_PASSWORD) # Invia le credenziali (SSID e Password) al router e avvia il processo di negoziazione.
+    
+    # Timer e attesa
+    start_time = time.time()  #Memorizza l'orario di inizio per poter calcolare dopo quanto tempo è passato (per il timeout)
     dot_count = 0
-    while not wlan.isconnected():
+    
+    while not wlan.isconnected():  # Ciclo finchè la connessione non è stabilita
+        # Animazione suul'Oled e led che lampeggia
         dot_count = (dot_count + 1) % 4
         oled_show_wifi(f"Connessione{'.' * dot_count}")
         led_blink(led_blue, interval=0.3)
-        if time.time() - start_time > timeout:
+        
+        # Gestione fallimento (Timeout)
+        if time.time() - start_time > timeout:  #Se la differenza tra l'ora attuale e l'inizio supera il timeout
             oled_show_wifi("Connessione fallita!")
             led_blue.value(0)
             return None
+        
+    # Gestione successo
     led_blue.value(1)
     oled_show_wifi("Wi-Fi connesso!")
     time.sleep(2)
+    # Restituisce l'oggetto wlan.
+    # Questo è importante perché il resto del programma userà questo oggetto per fare richieste su internet.
     return wlan
 
 def oled_frame():
@@ -157,7 +170,6 @@ if __name__ == "__main__":
         print("Sistema Connesso.")
     
     # FASE 2: SETUP SENSORI
-    
     # Attivazione dei sensori che supportano il protocollo I2C
     scan = i2c.scan()
     mpu = None
@@ -171,7 +183,7 @@ if __name__ == "__main__":
     attempts = MAX_ATTEMPTS
     entered = ""
     accel_active = True
-    last_key_time = 0
+    last_key_time = 0   # Rappresenta l'istante esatto (in millisecondi) in cui l'ultimo tasto è stato accettato come valido dal programma.
 
     oled_show("SISTEMA", "PRONTO!")
     sleep(1)
@@ -197,16 +209,28 @@ if __name__ == "__main__":
                 servo_angle(0) # Chiude la porta
 
         # B) GESTIONE TASTIERINO
-        key = kp.get_key()  # Usa la nuova classe Keypad
-        
+        # LETTURA DAL TASTIERINO
+        key = kp.get_key()  # Usa la classe Keypad
+        # Se key non è vuoto (quindi un tasto è stato premuto), entra nel blocco if.
         if key:
+            # GESTIONE DEI RIMBALZI
+            """ Il codice calcola la differenza di tempo (ticks_diff) tra l'istante attuale (ticks_ms)
+                e l'ultima volta che un tasto è stato accettato (last_key_time).
+                Se sono passati meno di 300 millisecondi dall'ultima pressione, il codice esegue continue.
+                Questo salta tutto il resto e ricomincia il ciclo,
+                ignorando la pressione (considerandola un errore o un "rimbalzo")."""
             if time.ticks_diff(time.ticks_ms(), last_key_time) < 300:
                 continue
             last_key_time = time.ticks_ms()
 
-            if key == "C":
+            # TASTO DI CANCELLAZIONE
+            """ La variabile entered (che contiene il codice segreto digitato finora) viene svuotata ("").
+                Lo schermo viene aggiornato per mostrare il messaggio iniziale ("Inserisci codice").
+                continue fa ripartire il ciclo da capo, ignorando le righe successive."""
+            if key == "#":
                 entered = ""; oled_show("Inserisci", "codice"); continue
 
+            # Memorizzazione e Visualizzazione "Mascherata"
             entered += key
             oled_show("Codice:", "*" * len(entered))
 
@@ -226,6 +250,7 @@ if __name__ == "__main__":
                     
                     # Reset variabili
                     attempts = MAX_ATTEMPTS; entered = ""; accel_active = True
+                    oled_show("Inserisci", "codice")
 
                 # CODICE ERRATO
                 else:
@@ -246,6 +271,7 @@ if __name__ == "__main__":
                             led_red.on(); buzzer.freq(1000); buzzer.duty(512)
                             sleep_ms(150); led_red.off(); buzzer.duty(0)
                             sleep_ms(600)
+                            
                         # Richiede il codice
                         attempts = MAX_ATTEMPTS; entered = ""; accel_active = True
                         oled_show("Inserisci", "codice")
