@@ -91,7 +91,7 @@ def connect_wifi(timeout=15):
     dot_count = 0
     
     while not wlan.isconnected():  # Ciclo finchè la connessione non è stabilita
-        # Animazione suul'Oled e led che lampeggia
+        # Animazione sull'Oled e led che lampeggia
         dot_count = (dot_count + 1) % 4
         oled_show_wifi(f"Connessione{'.' * dot_count}")
         led_blink(led_blue, interval=0.3)
