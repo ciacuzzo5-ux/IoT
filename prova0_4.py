@@ -22,6 +22,9 @@ I2C_SCL = 22
 OLED_WIDTH = 128
 OLED_HEIGHT = 64
 
+#PIN RESET
+RESET_BUTTON_PIN = 23
+
 # PIN SISTEMA SICUREZZA 
 LED_RED_PIN    = 4
 LED_GREEN_PIN  = 18
@@ -44,6 +47,9 @@ PI = 3.14159265
 
 
 # 2. INIZIALIZZAZIONE HARDWARE
+
+# PULSANTE RESET
+reset_button = Pin(RESET_BUTTON_PIN, Pin.IN, Pin.PULL_UP) # il pulsante funziona attivo basso
 
 # OLED
 i2c = SoftI2C(scl=Pin(I2C_SCL), sda=Pin(I2C_SDA), freq=100000)
@@ -73,6 +79,34 @@ tcrt_sensor = TCRT5000(pin=TCRT_PIN, invert=True)
 
 
 # 3. FUNZIONI DI SUPPORTO (Wifi, OLED, Suoni)
+
+# funzione per gestione reset
+def system_reset():
+    # 1. Spegni LED
+    led_red.value(0)
+    led_green.value(0)
+    led_blue.value(0)
+
+    # 2. Spegni buzzer
+    buzzer.duty(0)
+
+    # 3. Porta chiusa
+    servo_angle(0)
+
+    # 4. Messaggio OLED (se disponibile)
+    try:
+        oled.fill(0)
+        oled.text("RESET -", 20, 20)
+        oled.text("Riavvio...", 10, 40)
+        oled.show()
+    except:
+        pass  # se OLED non è disponibile, ignoriamo
+
+    # 5. Piccolo ritardo
+    time.sleep(0.4)
+
+    # 6. Reset hardware totale dell’ESP32
+    machine.reset()
 
 def oled_show_wifi(msg):
     oled.fill(0); oled.text(msg, 0, 20); oled.show()
@@ -191,7 +225,12 @@ if __name__ == "__main__":
 
     # FASE 3: LOOP DI SICUREZZA 
     while True:
-
+        
+        # controllo il pulsante reset
+        if reset_button.value() == 0: # pulsante premuto
+            time.sleep_ms(50) # debounce
+            if reset_button.value() == 0:
+                system_reset()
         # A) CONTROLLO SENSORI (Solo se l'allarme è ATTIVO)
         if accel_active:
             
