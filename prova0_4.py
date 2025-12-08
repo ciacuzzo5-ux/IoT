@@ -104,12 +104,16 @@ def system_reset():
     servo_angle(0)
 
     # 4. Mostra schermata di RESET usando la tua funzione oled_show()
+    # Mostra schermata di reset (se OLED disponibile)
     try:
-        oled_show("RESET", "Riavvio...")
+        oled.fill(0)
+        oled.text("RESET!", 20, 20)
+        oled.text("Riavvio...", 10, 40)
+        oled.show()
     except:
-        pass  # se OLED non è disponibile, continuiamo comunque
+        pass  # OLED non disponibile: prosegue comunque
 
-    # 5. Piccolissimo delay per permettere la visualizzazione
+    # Piccolo ritardo per permettere la visualizzazione
     time.sleep(0.4)
 
     # 6. Reset hardware totale dell’ESP32
@@ -132,7 +136,7 @@ def connect_wifi(timeout=15):
     dot_count = 0
     
     while not wlan.isconnected():  # Ciclo finchè la connessione non è stabilita
-        # Animazione suul'Oled e led che lampeggia
+        # Animazione sull'Oled e led che lampeggia
         dot_count = (dot_count + 1) % 4
         oled_show_wifi(f"Connessione{'.' * dot_count}")
         led_blink(led_blue, interval=0.3)
@@ -152,28 +156,33 @@ def connect_wifi(timeout=15):
     return wlan
 
 
-def mqtt_connet():
-    client = MQTTClient(MQTT_CLIENT_ID, client.set_callback(mqtt_on_message))
-    client.connet()
+def mqtt_connect():
+    client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER)
+    client.set_callback(mqtt_on_message)
+    client.connect()
     client.subscribe(MQTT_TOPIC_COMMAND)
     oled_show("MQTT connesso", "al broker")
     return client
 
 # successivamente aggiungeremo gli altri comandi
-def mqtt_on_message():
-    oled_show("Messaggio","ricevuto:",topic, msg)
+def mqtt_on_message(topic, msg):
+    global accel_active
     
-    if topic == MQTT_TOPIC_COMMAD:
-        comando = msg.decode()
-        if comando == "reset"
-            system_reset()
-        elif comando == "apri"
+    topic = topic.decode()
+    msg = msg.decode()
+
+    if topic == MQTT_TOPIC_COMMAND:
+
+        if msg == "apri":
+            accel_active = False 
             servo_angle(90)
-            oled_show("Porta aperta")
-        elif comando == "chiudi":
+            oled_show("Porta", "aperta")
+
+        elif msg == "chiudi":
+
             servo_angle(0)
-            oled_show("Porta chiusa")
-            
+            accel_active = True 
+            oled_show("Porta", "chiusa")
 
 
 
@@ -266,8 +275,9 @@ if __name__ == "__main__":
         # controllo il pulsante reset
         if reset_button.value() == 0: # pulsante premuto
             time.sleep_ms(50) # debounce
-            if reset_button.value() == 0:
+            if reset_button.value() == 1:
                 system_reset()
+             
         # A) CONTROLLO SENSORI (Solo se l'allarme è ATTIVO)
         if accel_active:
             
