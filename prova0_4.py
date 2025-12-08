@@ -7,7 +7,17 @@ from time import sleep_ms, sleep
 from ssd1306 import SSD1306_I2C
 from mpu6050 import MPU6050
 from TCRT5000 import TCRT5000 
-from keypad import Keypad  
+from keypad import Keypad
+from umqttsimple import MQTTClient
+import ubinascii
+import sys
+from boot import (
+    MQTT_BROKER,
+    MQTT_CLIENT_ID, 
+    MQTT_TOPIC_STATUS, 
+    MQTT_TOPIC_EVENTS, 
+    MQTT_TOPIC_COMMAND 
+    )
 
 
 # 1. CONFIGURAZIONE 
@@ -132,7 +142,7 @@ def connect_wifi(timeout=15):
             oled_show_wifi("Connessione fallita!")
             led_blue.value(0)
             return None
-        
+    
     # Gestione successo
     led_blue.value(1)
     oled_show_wifi("Wi-Fi connesso!")
@@ -140,6 +150,32 @@ def connect_wifi(timeout=15):
     # Restituisce l'oggetto wlan.
     # Questo è importante perché il resto del programma userà questo oggetto per fare richieste su internet.
     return wlan
+
+
+def mqtt_connet():
+    client = MQTTClient(MQTT_CLIENT_ID, client.set_callback(mqtt_on_message))
+    client.connet()
+    client.subscribe(MQTT_TOPIC_COMMAND)
+    oled_show("MQTT connesso", "al broker")
+    return client
+
+# successivamente aggiungeremo gli altri comandi
+def mqtt_on_message():
+    oled_show("Messaggio","ricevuto:",topic, msg)
+    
+    if topic == MQTT_TOPIC_COMMAD:
+        comando = msg.decode()
+        if comando == "reset"
+            system_reset()
+        elif comando == "apri"
+            servo_angle(90)
+            oled_show("Porta aperta")
+        elif comando == "chiudi":
+            servo_angle(0)
+            oled_show("Porta chiusa")
+            
+
+
 
 def oled_frame():
     oled.rect(0, 0, 128, 64, 1)
@@ -195,10 +231,12 @@ def activate_alarm(msg_line2):
 
 if __name__ == "__main__":
     
-    # FASE 1: CONNESSIONE 
+    # FASE 1: CONNESSIONE
     wlan = connect_wifi()
     if wlan and wlan.isconnected():
         print("Sistema Connesso.")
+    mqtt_client = mqtt_connect()
+    mqtt_client.publish(MQTT_TOPIC_STATUS, b"online")
     
     # FASE 2: SETUP SENSORI
     # Attivazione dei sensori che supportano il protocollo I2C
@@ -223,6 +261,8 @@ if __name__ == "__main__":
     # FASE 3: LOOP DI SICUREZZA 
     while True:
         
+        mqtt_client.check_msg()
+        
         # controllo il pulsante reset
         if reset_button.value() == 0: # pulsante premuto
             time.sleep_ms(50) # debounce
@@ -234,6 +274,7 @@ if __name__ == "__main__":
             # 1. Controllo Scasso (Accelerometro)
             if mpu and mpu.is_tampered(threshold=SOGLIA_SCASSO):
                 print("Allarme: Vibrazione rilevata")
+                mqtt_client.publish(MQTT_TOPIC_EVENTS, b"allarme_movimento")
                 activate_alarm("MOVIMENTO!")
                 servo_angle(0) # Chiude la porta
             
@@ -241,6 +282,7 @@ if __name__ == "__main__":
             # Logica: Se is_background() è True, significa che vede il "vuoto" -> Quadro rimosso
             elif tcrt_sensor.is_background():
                 print("Allarme: Quadro rimosso")
+                mqtt_client.publish(MQTT_TOPIC_EVENTS, b"allarme_quadro")
                 activate_alarm("QUADRO TOLTO!")
                 servo_angle(0) # Chiude la porta
 
@@ -276,6 +318,7 @@ if __name__ == "__main__":
                     accel_active = False # Disattiva i sensori
                     led_green.on(); beep_ok()
                     oled_show("ACCESSO", "CONSENTITO")
+                    mqtt_client.publish(MQTT_TOPIC_EVENTS, b"accesso_consentito")
                     
                     servo_angle(90) # Apre la porta per 10sec
                     oled_countdown("PORTA APERTA", 10)
