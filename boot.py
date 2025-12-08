@@ -6,7 +6,9 @@ import network
 import machine
 import esp
 import gc
+import math
 from machine import Pin
+
 
 # 1) DISABILITAZIONE DEBUG E PULIZIA RAM
 esp.osdebug(None)
@@ -27,45 +29,48 @@ MQTT_TOPIC_COMMAND = b"caveau/commands"
 
 # 4) COSTANTI DEL PROGETTO (SENZA LOGICA)
 SECRET_CODE = "2004"
-UNLOCK_DOOR = 10         # tempo apertura porta (sec)
+MAX_ATTEMPTS = 3
+BLOCK_TIME = 10
+SOGLIA_SCASSO = 0.15 # Sensibilità MPU
+# Uso della costante matematica pi greco
+PI = math.pi
 
 # Stato del caveau
 STATE_ARMED = 0          # sensori attivi
 STATE_UNLOCKED = 1       # codice corretto → porta aperta
 STATE_ALARM = 2          # allarme attivo
 
-# Soglia movimento accelerometro
-MOVEMENT_THRESHOLD = 8000
 
 # 5) PIN HARDWARE (SOLO DEFINIZIONE)
-# LED e buzzer
-LED_RED_PIN    = 15
-LED_GREEN_PIN  = 2
-LED_BLUE_PIN   = 4
+# LED
+LED_RED_PIN    = 4
+LED_GREEN_PIN  = 18
+LED_BLUE_PIN   = 2
+
+# BUZZER
 BUZZER_PIN     = 5
 
-# Servo
-SERVO_PIN = 18
+#SERVO
+SERVO_PIN      = 19 
+
+#PIN RESET
+RESET_BUTTON_PIN = 23
+
+# SENSORE IR 
+TCRT_PIN       = 34 
+
+# PIN E HARDWARE 
+I2C_SDA = 21
+I2C_SCL = 22
+OLED_WIDTH = 128
+OLED_HEIGHT = 64
 
 # Tastierino (solo pin — nessuna logica)
 ROWS_PINS = [27, 14, 12, 13]
 COLS_PINS = [26, 25, 33, 32]
 
-# Tasto di RESET
-RESET_PIN = 34
-# Sensore TCRT5000
-IR_SENSOR_PIN = 14
-
-# Sensore HCSR04
-PIN_TRIG = 19
-PIN_ECHO = 18
-
-#Oled e MPU6050
-I2C_SDA = 21
-I2C_SCL = 22
-
 #Logo da mostrare
-logo = bytearray([
+LOGO = bytearray([
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xff, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -131,8 +136,5 @@ logo = bytearray([
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f, 0x00, 0x00, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 ])
-
-# Uso della costante matematica pi greco
-PI = math.pi
 
 print("[BOOT] Inizializzazione completata.")

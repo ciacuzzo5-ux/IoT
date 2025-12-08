@@ -2,6 +2,11 @@ import network
 import machine
 import time
 import math
+import framebuf
+import utime
+import ubinascii
+import sys
+
 from machine import Pin, I2C, PWM, SoftI2C
 from time import sleep_ms, sleep
 from ssd1306 import SSD1306_I2C
@@ -9,57 +14,40 @@ from mpu6050 import MPU6050
 from TCRT5000 import TCRT5000 
 from keypad import Keypad
 from umqttsimple import MQTTClient
-import ubinascii
-import sys
+
 from boot import (
+    WIFI_NAME,
+    WIFI_PASSWORD,
     MQTT_BROKER,
     MQTT_CLIENT_ID, 
     MQTT_TOPIC_STATUS, 
     MQTT_TOPIC_EVENTS, 
-    MQTT_TOPIC_COMMAND 
+    MQTT_TOPIC_COMMAND,
+    SECRET_CODE,
+    MAX_ATTEMPTS,
+    BLOCK_TIME,
+    SOGLIA_SCASSO,
+    PI,
+    LED_RED_PIN,
+    LED_GREEN_PIN,
+    LED_BLUE_PIN,
+    BUZZER_PIN,
+    SERVO_PIN,
+    RESET_BUTTON_PIN,
+    TCRT_PIN,
+    I2C_SDA,
+    I2C_SCL,
+    OLED_WIDTH,
+    OLED_HEIGHT,
+    ROWS_PINS,
+    COLS_PINS,
+    LOGO
     )
 
-
-# 1. CONFIGURAZIONE 
-
-# WI-FI 
-WIFI_NAME = "iPhone di Chiara"        
-WIFI_PASSWORD = "23032004"            
-
-# PIN E HARDWARE 
-I2C_SDA = 21
-I2C_SCL = 22
-OLED_WIDTH = 128
-OLED_HEIGHT = 64
-
-#PIN RESET
-RESET_BUTTON_PIN = 23
-
-# PIN SISTEMA SICUREZZA 
-LED_RED_PIN    = 4
-LED_GREEN_PIN  = 18
-LED_BLUE_PIN   = 2
-BUZZER_PIN     = 5
-SERVO_PIN      = 19 
-
-# SENSORE IR 
-TCRT_PIN       = 34 
-
-# Pin TASTIERINO (Passati poi alla classe Keypad)
-ROWS_PINS = [27, 14, 12, 13]
-COLS_PINS = [26, 25, 33, 32]
-
-SECRET_CODE = "2004"
-MAX_ATTEMPTS = 3
-BLOCK_TIME = 10
-SOGLIA_SCASSO = 0.15 # Sensibilità MPU
-PI = 3.14159265
-
-
-# 2. INIZIALIZZAZIONE HARDWARE
+# 1. INIZIALIZZAZIONE HARDWARE
 
 # PULSANTE RESET
-reset_button = Pin(RESET_BUTTON_PIN, Pin.IN, Pin.PULL_UP) # il pulsante funziona attivo basso
+reset_button = Pin(RESET_BUTTON_PIN, Pin.IN, Pin.PULL_UP) # Il pulsante funziona attivo basso
 
 # OLED
 i2c = SoftI2C(scl=Pin(I2C_SCL), sda=Pin(I2C_SDA), freq=100000)
@@ -83,14 +71,14 @@ servo = PWM(Pin(SERVO_PIN), freq=50)
 kp = Keypad(ROWS_PINS, COLS_PINS)
 
 # INIZIALIZZAZIONE SENSORE QUADRO (TCRT5000)
-# invert=True solitamente fa sì che is_background() sia True quando NON c'è riflesso.
+# invert=True fa sì che is_background() sia True quando NON c'è riflesso.
 # Questo corrisponde alla logica: "Vedo lo sfondo" = "Quadro rimosso"
 tcrt_sensor = TCRT5000(pin=TCRT_PIN, invert=True)
 
 
 # 3. FUNZIONI DI SUPPORTO (Wifi, OLED, Suoni)
 
-# funzione per gestione reset
+# Funzione per gestione del RESET
 def system_reset():
     # 1. Spegni LED
     led_red.value(0)
@@ -119,6 +107,20 @@ def system_reset():
     # 6. Reset hardware totale dell’ESP32
     machine.reset()
 
+# FUNZIONE LOGO
+def oled_show_logo():
+    # Creazione del buffer grafico usando la variabile globale LOGO (da boot.py)
+    fb = framebuf.FrameBuffer(LOGO, 128, 64, framebuf.MONO_HLSB)
+    
+    oled.fill(0)        # Pulisce lo schermo
+    oled.blit(fb, 0, 0) # Disegna il buffer sullo schermo
+    oled.show()         # Aggiorna il display fisico
+    
+    time.sleep(2)       # Attende 2 secondi
+    
+    oled.fill(0)        # Pulisce lo schermo
+    oled.show()
+    
 def oled_show_wifi(msg):
     oled.fill(0); oled.text(msg, 0, 20); oled.show()
 
@@ -185,7 +187,6 @@ def mqtt_on_message(topic, msg):
             oled_show("Porta", "chiusa")
 
 
-
 def oled_frame():
     oled.rect(0, 0, 128, 64, 1)
 
@@ -247,6 +248,19 @@ if __name__ == "__main__":
     mqtt_client = mqtt_connect()
     mqtt_client.publish(MQTT_TOPIC_STATUS, b"online")
     
+    # Mostro il logo, il nome del progetto e il gruppo
+    oled_show_logo()
+    oled_show("Nome progetto");
+    time.sleep(3)
+    oled.fill(0)                      # Ripulisco lo schermo
+    oled_frame()                      # Disegna la cornice
+    oled_center("Gruppo 11", 10)      # Titolo in alto (y=10)
+    oled_center("Chiara Iacuzzo", 30) # Primo nome al centro (y=30)
+    oled_center("Valeria Lupo", 45)   # Secondo nome in basso (y=45)
+    oled.show()
+    
+    time.sleep(3) # Lascia leggere i nomi per 3 secondi
+    
     # FASE 2: SETUP SENSORI
     # Attivazione dei sensori che supportano il protocollo I2C
     scan = i2c.scan()
@@ -272,7 +286,7 @@ if __name__ == "__main__":
         
         mqtt_client.check_msg()
         
-        # controllo il pulsante reset
+        # Controllo il pulsante reset
         if reset_button.value() == 0: # pulsante premuto
             time.sleep_ms(50) # debounce
             if reset_button.value() == 1:
@@ -281,7 +295,7 @@ if __name__ == "__main__":
         # A) CONTROLLO SENSORI (Solo se l'allarme è ATTIVO)
         if accel_active:
             
-            # 1. Controllo Scasso (Accelerometro)
+            # 1. Controllo Vaso (Accelerometro)
             if mpu and mpu.is_tampered(threshold=SOGLIA_SCASSO):
                 print("Allarme: Vibrazione rilevata")
                 mqtt_client.publish(MQTT_TOPIC_EVENTS, b"allarme_movimento")
