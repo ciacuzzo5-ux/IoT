@@ -1,3 +1,4 @@
+# main.py
 import network
 import machine
 import time
@@ -211,8 +212,7 @@ if __name__ == "__main__":
     oled_center("Chiara Iacuzzo", 30) # Primo nome al centro (y=30)
     oled_center("Valeria Lupo", 45)   # Secondo nome in basso (y=45)
     oled.show()
-    
-    time.sleep(3) # Lascia leggere i nomi per 3 secondi
+    time.sleep(3)                     # Lascia leggere i nomi per 3 secondi
     
     # FASE 2: SETUP SENSORI
     # Attivazione dei sensori che supportano il protocollo I2C
@@ -296,6 +296,7 @@ if __name__ == "__main__":
                     led_green.on(); beep_ok()
                     oled_show("ACCESSO", "CONSENTITO")
                     mqtt_client.publish(MQTT_TOPIC_EVENTS, b"accesso_consentito")
+                    mqtt_client.publish(MQTT_TOPIC_STATUS, b"aperta")
                     
                     servo_angle(90) # Apre la porta per 10sec
                     oled_countdown("PORTA APERTA", 10)
@@ -319,6 +320,8 @@ if __name__ == "__main__":
                     else:
                         accel_active = False # Blocca tutto
                         for i in range(BLOCK_TIME, 0, -1):
+                            mqtt_client.publish(MQTT_TOPIC_EVENTS, b"accesso_negato")
+                            mqtt_client.publish(MQTT_TOPIC_STATUS, b"allarme")
                             oled_show("CAVEAU BLOCCATO!", f"Attendi {i}s")
                             # Accenzione-spegnimento del led e del buzzer
                             led_red.on(); buzzer.freq(1000); buzzer.duty(512)
