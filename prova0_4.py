@@ -7,13 +7,15 @@ import utime
 import ubinascii
 import sys
 
+from oled import OLED
+from buzzer import BUZZER
 from machine import Pin, I2C, PWM, SoftI2C
 from time import sleep_ms, sleep
 from ssd1306 import SSD1306_I2C
 from mpu6050 import MPU6050
 from TCRT5000 import TCRT5000 
 from keypad import Keypad
-from umqttsimple import MQTTClient
+from umqtt.simple import MQTTClient
 
 from boot import (
     WIFI_NAME,
@@ -61,7 +63,7 @@ led_green = Pin(LED_GREEN_PIN, Pin.OUT)
 
 # BUZZER (CONFIGURATO COME PWM)
 # Qui viene inizializzato il PWM sul pin del buzzer
-buzzer = PWM(Pin(BUZZER_PIN))
+buzzer = BUZZER(BUZZER_PIN)
 buzzer.duty(0) # Inizia spento (duty cycle a 0)
 
 # SERVO
@@ -107,25 +109,6 @@ def system_reset():
     # 6. Reset hardware totale dell’ESP32
     machine.reset()
 
-# FUNZIONE LOGO
-def oled_show_logo():
-    # Creazione del buffer grafico usando la variabile globale LOGO (da boot.py)
-    fb = framebuf.FrameBuffer(LOGO, 128, 64, framebuf.MONO_HLSB)
-    
-    oled.fill(0)        # Pulisce lo schermo
-    oled.blit(fb, 0, 0) # Disegna il buffer sullo schermo
-    oled.show()         # Aggiorna il display fisico
-    
-    time.sleep(2)       # Attende 2 secondi
-    
-    oled.fill(0)        # Pulisce lo schermo
-    oled.show()
-    
-def oled_show_wifi(msg):
-    oled.fill(0); oled.text(msg, 0, 20); oled.show()
-
-def led_blink(led, interval=0.2):
-    led.value(1); time.sleep(interval); led.value(0); time.sleep(interval)
 
 def connect_wifi(timeout=15):
     # Preparazione e Avvio
@@ -184,49 +167,19 @@ def mqtt_on_message(topic, msg):
 
             servo_angle(0)
             accel_active = True 
-            oled_show("Porta", "chiusa")
+            oled_show("Porta", "chiusa") 
+            
 
 
-def oled_frame():
-    oled.rect(0, 0, 128, 64, 1)
 
-def oled_center(text, y):
-    x = max(0, (128 - len(text)*8)//2)
-    oled.text(text, x, y)
-
-def oled_show(title, msg=""):
-    oled.fill(0); oled_frame()
-    oled_center(title, 10)
-    if msg: oled_center(msg, 35)
-    oled.show()
-
-def oled_countdown(title, sec):
-    for i in range(sec, 0, -1):
-        oled.fill(0); oled_frame()
-        oled_center(title, 5); oled_center("Chiusura porta:", 25); oled_center(str(i), 45)
-        oled.show(); sleep(1)
+# FUNZIONI DI SUPPORTO
 
 def servo_angle(angle):
     duty = int((angle / 180) * 102 + 26)
     servo.duty(duty)
 
-def beep_ok():
-    buzzer.freq(2000); buzzer.duty(512); sleep_ms(150); buzzer.duty(0)
-
-def beep_error():
-    buzzer.freq(1000); buzzer.duty(512); sleep_ms(200); buzzer.duty(0)
-
-# Allarme sinusoidale
-def play_continuous_siren(duration_ms=2000):
-    start = time.ticks_ms()
-    buzzer.duty(512)
-    x = 0
-    while time.ticks_diff(time.ticks_ms(), start) < duration_ms:
-        sinVal = math.sin(x * 10 * PI / 180)
-        tone = 2000 + int(sinVal * 500)
-        buzzer.freq(tone)
-        sleep_ms(10); x += 1
-    buzzer.duty(0)
+def led_blink(led, interval=0.2):
+    led.value(1); time.sleep(interval); led.value(0); time.sleep(interval)
 
 def activate_alarm(msg_line2):
     # Funzione unica per scatenare l'allarme
