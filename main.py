@@ -10,9 +10,14 @@ import math
 from machine import Pin
 
 
+<<<<<<< Updated upstream
 # 1) DISABILITAZIONE DEBUG E PULIZIA RAM
 esp.osdebug(None)
 gc.collect()
+=======
+
+# 1. INIZIALIZZAZIONE HARDWARE
+>>>>>>> Stashed changes
 
 # 2) CONFIGURAZIONE WI-FI
 WIFI_NAME = 'iPhone di Chiara'
