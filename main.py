@@ -11,9 +11,14 @@ from machine import Pin
 
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # 1) DISABILITAZIONE DEBUG E PULIZIA RAM
 esp.osdebug(None)
 gc.collect()
+=======
+
+# 1. INIZIALIZZAZIONE HARDWARE
+>>>>>>> Stashed changes
 =======
 
 # 1. INIZIALIZZAZIONE HARDWARE
