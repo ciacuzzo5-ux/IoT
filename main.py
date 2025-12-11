@@ -1,41 +1,31 @@
+# main.py - Serve ad implementare tutta la logica del programma.
 import network
 import machine
 import time
 from machine import Pin, I2C, PWM, SoftI2C
 from umqtt.simple import MQTTClient
 
-# --- IMPORT CLASSI ---
-from oled import OLED            
-from buzzer import BUZZER        
-from mpu6050 import MPU6050      
-from TCRT5000 import TCRT5000    
-from keypad import Keypad
-# ### NUOVO: Importiamo la classe KY003 ###
-from ky003 import KY003       
+from oled import OLED           
+from buzzer import BUZZER       
+from mpu6050 import MPU6050     
+from TCRT5000 import TCRT5000
+from ky003 import KY003
+from keypad import Keypad       
 
-# --- IMPORT CONFIGURAZIONE (boot.py) ---
-# Nota: Assicurati di aver definito KY003_PIN nel tuo boot.py, 
-# altrimenti lo definisco qui sotto come fallback.
-try:
-    from boot import (
-        WIFI_NAME, WIFI_PASSWORD, MQTT_BROKER, MQTT_CLIENT_ID, 
-        MQTT_TOPIC_STATUS, MQTT_TOPIC_EVENTS, MQTT_TOPIC_COMMAND,
-        SECRET_CODE, MAX_ATTEMPTS, BLOCK_TIME, SOGLIA_SCASSO,
-        LED_RED_PIN, LED_GREEN_PIN, LED_BLUE_PIN, BUZZER_PIN,
-        SERVO_PIN, RESET_BUTTON_PIN, TCRT_PIN, I2C_SDA, I2C_SCL,
-        OLED_WIDTH, OLED_HEIGHT, ROWS_PINS, COLS_PINS
-    )
-except ImportError:
-    print("Errore import boot.py, verificane l'esistenza.")
-
-# ### CONFIGURAZIONE PIN KY-003 ###
-# Cambia 16 con il pin effettivo dove hai collegato il sensore porta
-KY003_PIN = 16  
+# IMPORT CONFIGURAZIONE (boot.py) 
+from boot import (
+    WIFI_NAME, WIFI_PASSWORD, MQTT_BROKER, MQTT_CLIENT_ID, 
+    MQTT_TOPIC_STATUS, MQTT_TOPIC_EVENTS, MQTT_TOPIC_COMMAND,
+    SECRET_CODE, MAX_ATTEMPTS, BLOCK_TIME, SOGLIA_SCASSO,
+    LED_RED_PIN, LED_GREEN_PIN, LED_BLUE_PIN, BUZZER_PIN,
+    SERVO_PIN, RESET_BUTTON_PIN, TCRT_PIN, I2C_SDA, I2C_SCL,
+    OLED_WIDTH, OLED_HEIGHT, ROWS_PINS, COLS_PINS
+)
 
 
-# ==========================================
+
 # 1. INIZIALIZZAZIONE HARDWARE
-# ==========================================
+
 
 # LED 
 led_red = Pin(LED_RED_PIN, Pin.OUT); led_red.value(0)
@@ -53,9 +43,6 @@ reset_button = Pin(RESET_BUTTON_PIN, Pin.IN, Pin.PULL_UP)
 kp = Keypad(ROWS_PINS, COLS_PINS)
 tcrt_sensor = TCRT5000(pin=TCRT_PIN, invert=True)
 
-# ### NUOVO: Inizializzazione Sensore Porta KY-003 ###
-door_sensor = KY003(KY003_PIN)
-
 # OLED (Inizializzazione con la tua classe)
 i2c = SoftI2C(scl=Pin(I2C_SCL), sda=Pin(I2C_SDA), freq=100000)
 oled = OLED(OLED_WIDTH, OLED_HEIGHT, i2c) 
@@ -64,10 +51,11 @@ oled = OLED(OLED_WIDTH, OLED_HEIGHT, i2c)
 mqtt_client = None
 sensor_active = True
 
+# KY003
+door_sensor = KY003(KY003_PIN)
 
-# ==========================================
 # 2. FUNZIONI DI SUPPORTO
-# ==========================================
+
 
 def servo_angle(angle):
     duty = int((angle / 180) * 102 + 26)
@@ -77,18 +65,25 @@ def led_blink(led, interval=0.2):
     led.value(1); time.sleep(interval); led.value(0); time.sleep(interval)
 
 def system_reset():
-    """ Reset sistema con avviso su OLED e spegnimento LED """
+    # Reset sistema con avviso su OLED e spegnimento LED 
     led_red.value(0); led_green.value(0); led_blue.value(0)
     servo_angle(0)
     
-    # Usa il metodo show della tua classe
-    oled.show("RESET SISTEMA", "Riavvio...") 
-    
-    time.sleep(1)
+    # Animazione loop (faccio 8 passaggi, circa 3-4 secondi totali)
+    for i in range(8):
+        dots = i % 4  # Risultato: 0, 1, 2, 3, 0, 1...
+        if oled:
+            # Crea la stringa dinamica: "Riavvio", "Riavvio.", "Riavvio..", "Riavvio..."
+            oled.show("RESET SISTEMA!", f"Riavvio{'.' * dots}")
+        
+        # Velocità dell'animazione
+        time.sleep(0.4)
+
+    # Esegue il reset hardware
     machine.reset()
 
 def activate_alarm(reason):
-    """ Sequenza allarme """
+    # Sequenza allarme 
     led_red.value(1)
     oled.show("ALLARME!!!", reason)
     
@@ -98,7 +93,7 @@ def activate_alarm(reason):
     # Attende 2 secondi mentre l'allarme suona
     time.sleep(2)
     
-    # Ferma il buzzer (assumendo esista un metodo stop() o duty 0)
+    # Ferma il buzzer (assumendo esista un metodo stop())
     buzzer.duty(0)
     
     # Ripristina lo stato iniziale
@@ -106,10 +101,10 @@ def activate_alarm(reason):
     oled.show("Inserisci", "codice")
 
 
-# ==========================================
-# 3. GESTIONE WI-FI E MQTT
-# ==========================================
 
+# 3. GESTIONE WI-FI E MQTT
+
+# FUNZIONE PER LA CONNESSIONE WI-FI
 def connect_wifi(timeout=20):
     wlan = network.WLAN(network.STA_IF)
     
@@ -133,7 +128,7 @@ def connect_wifi(timeout=20):
         # Aggiorna OLED con animazione
         oled.show(f"Connessione{'.' * dots}") 
         
-        # Fai lampeggiare il LED blu
+        # Facciamo lampeggiare il LED blu
         led_blue.value(not led_blue.value())
         time.sleep(0.5)
         
@@ -148,8 +143,8 @@ def connect_wifi(timeout=20):
     print(f"CONNESSO! IP: {ip_address}")
     
     led_blue.value(1) # LED fisso acceso
-    oled.show("Wi-Fi OK!", ip_address) # Mostra IP su schermo
-    time.sleep(3) # Tempo per leggere l'IP
+    oled.show("Wi-Fi OK!", "Connessione riuscita.") 
+    time.sleep(3) 
     
     return wlan
 
@@ -235,14 +230,13 @@ if __name__ == "__main__":
     last_key_time = 0 
     sensor_active = True
     
-   
-    oled.show_logo() 
-    
     # Intro Schermo
-    oled.show("Nome progetto")
+    oled.show_logo()
+    
+    oled.show("Gruppo 11", "Nome progetto")
     time.sleep(2)
     
-    oled.show("Gruppo 11", "Chiara & Valeria") 
+    oled.show("Iacuzzo Chiara", "Lupo Valeria") 
     time.sleep(3)
     
     
@@ -263,8 +257,6 @@ if __name__ == "__main__":
             if reset_button.value() == 1: system_reset()
 
         # A) CONTROLLO SENSORI
-        # I sensori vengono controllati SOLO se sensor_active è True
-        # (cioè se non abbiamo aperto la porta con il codice corretto)
         if sensor_active:
             trigger_reason = ""
             trigger_event = None
@@ -279,7 +271,7 @@ if __name__ == "__main__":
                 trigger_reason = "QUADRO TOLTO!"
                 trigger_event = b"allarme_quadro"
                 
-            # 3. ### NUOVO ### Controllo PORTA (Sensore Hall KY-003)
+            # 3. Controllo PORTA (Sensore Hall KY-003)
             # Se il magnete è assente, la porta è stata forzata
             elif door_sensor.is_magnete_assente():
                 trigger_reason = "PORTA FORZATA!"
@@ -290,7 +282,7 @@ if __name__ == "__main__":
                 print(f"ALARM: {trigger_reason}")
                 mqtt_client.publish(MQTT_TOPIC_EVENTS, trigger_event)
                 mqtt_client.publish(MQTT_TOPIC_STATUS, b"allarme")
-                servo_angle(0) # Forza la chiusura del servo
+                servo_angle(0)
                 activate_alarm(trigger_reason)
                 
                 # Ripristino
@@ -313,10 +305,7 @@ if __name__ == "__main__":
             if len(entered) == len(SECRET_CODE):
                 if entered == SECRET_CODE:
                     # --- ACCESSO CONSENTITO ---
-                    # Disattiviamo i sensori per non far scattare l'allarme
-                    # mentre apriamo la porta legalmente
                     sensor_active = False 
-                    
                     led_green.value(1)
                     buzzer.beep_ok()
                     oled.show("ACCESSO", "CONSENTITO")
@@ -324,18 +313,16 @@ if __name__ == "__main__":
                     mqtt_client.publish(MQTT_TOPIC_EVENTS, b"accesso_consentito")
                     mqtt_client.publish(MQTT_TOPIC_STATUS, b"aperta")
                     
-                    servo_angle(90) # Apre la porta
+                    servo_angle(90)
                     
-                    # Countdown su OLED
                     oled.countdown("PORTA APERTA", 10)
                     
-                    servo_angle(0) # Chiude la porta
+                    servo_angle(0)
                     
                     led_green.value(0)
                     oled.show("PORTA", "CHIUSA")
                     mqtt_client.publish(MQTT_TOPIC_STATUS, b"chiusa")
                     
-                    # Reset variabili e riattivazione sensori
                     attempts = MAX_ATTEMPTS; entered = ""; sensor_active = True
                     time.sleep(1)
                     oled.show("Inserisci", "codice")
