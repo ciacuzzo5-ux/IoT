@@ -72,7 +72,6 @@ def system_reset():
     time.sleep(1)
     machine.reset()
 
-
 def activate_alarm(reason):
     """ Sequenza allarme """
     led_red.value(1)
@@ -90,6 +89,7 @@ def activate_alarm(reason):
     # Ripristina lo stato iniziale
     led_red.value(0)
     oled.show("Inserisci", "codice")
+
 
 # ==========================================
 # 3. GESTIONE WI-FI E MQTT
