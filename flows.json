@@ -1,0 +1,1512 @@
+[
+    {
+        "id": "6bfa2def8dfe142c",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6730de72d628b9fa",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 180,
+        "wires": [
+            [
+                "b88085093e788e1b"
+            ]
+        ]
+    },
+    {
+        "id": "b88085093e788e1b",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "24eb2eb99daef98c",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 530,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "c5ec5e41f25781c9",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 320,
+        "wires": [
+            [
+                "20768a25d02ba157"
+            ]
+        ]
+    },
+    {
+        "id": "b22bfe7dbc43187c",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 530,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "20768a25d02ba157",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "f9fd4026c9083e79",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 460,
+        "wires": [
+            [
+                "9619775eb7aad06e"
+            ]
+        ]
+    },
+    {
+        "id": "33edf2b3d437428d",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 530,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "9619775eb7aad06e",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "8d641c504f4430bc",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 600,
+        "wires": [
+            [
+                "fb87d6eab13e7762"
+            ]
+        ]
+    },
+    {
+        "id": "f85a819d452f19f9",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/commands",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 530,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "fb87d6eab13e7762",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "f99abe77a7207c3e",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 960,
+        "wires": [
+            [
+                "f14a8424dec7c7ba"
+            ]
+        ]
+    },
+    {
+        "id": "aceeb26b1049407d",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "f14a8424dec7c7ba",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "4574f5fad872ed63",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "allarme_quadro",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "allarme_quadro",
+        "payloadType": "str",
+        "x": 220,
+        "y": 1020,
+        "wires": [
+            [
+                "aceeb26b1049407d"
+            ]
+        ]
+    },
+    {
+        "id": "6411c9bb1c9c17fe",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1220,
+        "wires": [
+            [
+                "4e34c89fe4186e4f"
+            ]
+        ]
+    },
+    {
+        "id": "f0db07aff0643db7",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "4e34c89fe4186e4f",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "98c0c414d4b7b31a",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "accesso_consentito",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "accesso_consentito",
+        "payloadType": "str",
+        "x": 230,
+        "y": 1280,
+        "wires": [
+            [
+                "f0db07aff0643db7"
+            ]
+        ]
+    },
+    {
+        "id": "627e54be2d8350a6",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1360,
+        "wires": [
+            [
+                "a0852e2a69f62d4d"
+            ]
+        ]
+    },
+    {
+        "id": "8f4397035d92af91",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "a0852e2a69f62d4d",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1360,
+        "wires": []
+    },
+    {
+        "id": "b7e65752d9063a7d",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "codice_errato",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "codice_errato",
+        "payloadType": "str",
+        "x": 210,
+        "y": 1420,
+        "wires": [
+            [
+                "8f4397035d92af91"
+            ]
+        ]
+    },
+    {
+        "id": "dedb14661031b1d7",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1480,
+        "wires": [
+            [
+                "27ecfb15079f951d"
+            ]
+        ]
+    },
+    {
+        "id": "dc2506e8d20aa45f",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1540,
+        "wires": []
+    },
+    {
+        "id": "27ecfb15079f951d",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1480,
+        "wires": []
+    },
+    {
+        "id": "20ea0c65c8744540",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "caveau_bloccato",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "caveau_bloccato",
+        "payloadType": "str",
+        "x": 220,
+        "y": 1540,
+        "wires": [
+            [
+                "dc2506e8d20aa45f"
+            ]
+        ]
+    },
+    {
+        "id": "74278ffc17b791ec",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1620,
+        "wires": [
+            [
+                "8890d70e5e9fb8ce"
+            ]
+        ]
+    },
+    {
+        "id": "22e36fe3df5beadb",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1680,
+        "wires": []
+    },
+    {
+        "id": "8890d70e5e9fb8ce",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1620,
+        "wires": []
+    },
+    {
+        "id": "664793e2cb10ef18",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "apertura_remota",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "apertura_remota",
+        "payloadType": "str",
+        "x": 220,
+        "y": 1680,
+        "wires": [
+            [
+                "22e36fe3df5beadb"
+            ]
+        ]
+    },
+    {
+        "id": "227c3618b2e45e9f",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1760,
+        "wires": [
+            [
+                "d9b442bb8367447e"
+            ]
+        ]
+    },
+    {
+        "id": "e6bcd8aae26f676e",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1820,
+        "wires": []
+    },
+    {
+        "id": "d9b442bb8367447e",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1760,
+        "wires": []
+    },
+    {
+        "id": "ea6f0cc4a2c06049",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "allarme_remoto",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "allarme_remoto",
+        "payloadType": "str",
+        "x": 220,
+        "y": 1820,
+        "wires": [
+            [
+                "e6bcd8aae26f676e"
+            ]
+        ]
+    },
+    {
+        "id": "707213aada2556a1",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 1080,
+        "wires": [
+            [
+                "4e7f1dafb21e73c7"
+            ]
+        ]
+    },
+    {
+        "id": "17c663eb76900694",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "4e7f1dafb21e73c7",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "35af8a7771e9431b",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "allarme_vaso",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "allarme_vaso",
+        "payloadType": "str",
+        "x": 210,
+        "y": 1140,
+        "wires": [
+            [
+                "17c663eb76900694"
+            ]
+        ]
+    },
+    {
+        "id": "1c800b7cbf27d799",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 2340,
+        "wires": [
+            [
+                "fe96c0a4ce6e0078"
+            ]
+        ]
+    },
+    {
+        "id": "02e0e135531c359f",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 2400,
+        "wires": []
+    },
+    {
+        "id": "fe96c0a4ce6e0078",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 2340,
+        "wires": []
+    },
+    {
+        "id": "208bac724f4efdee",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "online",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "online",
+        "payloadType": "str",
+        "x": 190,
+        "y": 2400,
+        "wires": [
+            [
+                "02e0e135531c359f"
+            ]
+        ]
+    },
+    {
+        "id": "8f6e540de717cf05",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 2480,
+        "wires": [
+            [
+                "498527d75f84daea"
+            ]
+        ]
+    },
+    {
+        "id": "9c0579617ae955fd",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 2540,
+        "wires": []
+    },
+    {
+        "id": "498527d75f84daea",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 2480,
+        "wires": []
+    },
+    {
+        "id": "673506a45d332091",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "chiusa",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "chiusa",
+        "payloadType": "str",
+        "x": 190,
+        "y": 2540,
+        "wires": [
+            [
+                "9c0579617ae955fd"
+            ]
+        ]
+    },
+    {
+        "id": "562a413fa42afd95",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 2620,
+        "wires": [
+            [
+                "85364241ca06aa34"
+            ]
+        ]
+    },
+    {
+        "id": "d85ee46193d9edad",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 2680,
+        "wires": []
+    },
+    {
+        "id": "85364241ca06aa34",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 2620,
+        "wires": []
+    },
+    {
+        "id": "fd08da07ebf71632",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "aperta",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "aperta",
+        "payloadType": "str",
+        "x": 190,
+        "y": 2680,
+        "wires": [
+            [
+                "d85ee46193d9edad"
+            ]
+        ]
+    },
+    {
+        "id": "86646cd3e197a3c8",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 2760,
+        "wires": [
+            [
+                "1d59265e84b6bee3"
+            ]
+        ]
+    },
+    {
+        "id": "dd3509fe9d62451c",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 2820,
+        "wires": []
+    },
+    {
+        "id": "1d59265e84b6bee3",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 16",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 2760,
+        "wires": []
+    },
+    {
+        "id": "4aa6f6ec2204c51e",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "allarme",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "allarme",
+        "payloadType": "str",
+        "x": 190,
+        "y": 2820,
+        "wires": [
+            [
+                "dd3509fe9d62451c"
+            ]
+        ]
+    },
+    {
+        "id": "622ce2b335fedcf1",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 2900,
+        "wires": [
+            [
+                "2551c8c9d0d65906"
+            ]
+        ]
+    },
+    {
+        "id": "9d4241826ff68745",
+        "type": "mqtt out",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 520,
+        "y": 2960,
+        "wires": []
+    },
+    {
+        "id": "2551c8c9d0d65906",
+        "type": "debug",
+        "z": "6bfa2def8dfe142c",
+        "name": "debug 17",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 2900,
+        "wires": []
+    },
+    {
+        "id": "757d31f261e52dfd",
+        "type": "inject",
+        "z": "6bfa2def8dfe142c",
+        "name": "reset_remoto",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "reset_remoto",
+        "payloadType": "str",
+        "x": 210,
+        "y": 2960,
+        "wires": [
+            [
+                "9d4241826ff68745"
+            ]
+        ]
+    },
+    {
+        "id": "67b4606ed15b7bd6",
+        "type": "ui_button",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "group": "80692869c539b5fb",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "RESET",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "reset",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 200,
+        "y": 240,
+        "wires": [
+            [
+                "24eb2eb99daef98c"
+            ]
+        ]
+    },
+    {
+        "id": "3d08e30d07c0f766",
+        "type": "ui_button",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "group": "80692869c539b5fb",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "APRI PORTA",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "apri",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 220,
+        "y": 380,
+        "wires": [
+            [
+                "b22bfe7dbc43187c"
+            ]
+        ]
+    },
+    {
+        "id": "37e9a8aaf6cba955",
+        "type": "ui_button",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "group": "80692869c539b5fb",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "CHIUDI PORTA",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "chiudi",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 220,
+        "y": 520,
+        "wires": [
+            [
+                "33edf2b3d437428d"
+            ]
+        ]
+    },
+    {
+        "id": "930e9bff4455cdad",
+        "type": "ui_button",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "group": "80692869c539b5fb",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "ATTIVA ALLARME",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "allarme",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 230,
+        "y": 660,
+        "wires": [
+            [
+                "f85a819d452f19f9"
+            ]
+        ]
+    },
+    {
+        "id": "9f607df93ceeed9b",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 2260,
+        "wires": [
+            [
+                "f66b8b30a7475667"
+            ]
+        ]
+    },
+    {
+        "id": "f66b8b30a7475667",
+        "type": "ui_text",
+        "z": "6bfa2def8dfe142c",
+        "group": "d8340ce6cb22c953",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Stato Attuale",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 470,
+        "y": 2260,
+        "wires": []
+    },
+    {
+        "id": "68a0bcda67bee3a7",
+        "type": "mqtt in",
+        "z": "6bfa2def8dfe142c",
+        "name": "",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 900,
+        "wires": [
+            [
+                "be4fd877a5bbca73"
+            ]
+        ]
+    },
+    {
+        "id": "be4fd877a5bbca73",
+        "type": "ui_toast",
+        "z": "6bfa2def8dfe142c",
+        "position": "top right",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 530,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "d31b82f67cf1457a",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mosquitto",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "80692869c539b5fb",
+        "type": "ui_group",
+        "name": "Commands",
+        "tab": "d1caf20e9d50091c",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d8340ce6cb22c953",
+        "type": "ui_group",
+        "name": "Status",
+        "tab": "357832626d2b5322",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d1caf20e9d50091c",
+        "type": "ui_tab",
+        "name": "Caveau",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "357832626d2b5322",
+        "type": "ui_tab",
+        "name": "Caveau",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "43ca410ffd743757",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
