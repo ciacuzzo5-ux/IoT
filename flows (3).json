@@ -1,0 +1,659 @@
+[
+    {
+        "id": "c7ccafe5abfad7f1",
+        "type": "tab",
+        "label": "Caveau Control",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "92a33e2cb9f99956",
+        "type": "ui_button",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "grp_commands",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "RESET SYSTEM",
+        "tooltip": "Riavvia l'ESP32",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "fa-refresh",
+        "payload": "reset",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "a1cc4c5f849e78ca"
+            ]
+        ]
+    },
+    {
+        "id": "5895a1c4ab87888e",
+        "type": "ui_button",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "grp_commands",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "APRI PORTA",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "#28a745",
+        "className": "",
+        "icon": "fa-unlock",
+        "payload": "apri",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "a1cc4c5f849e78ca"
+            ]
+        ]
+    },
+    {
+        "id": "b0067b5bf93ad218",
+        "type": "ui_button",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "grp_commands",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "CHIUDI PORTA",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "#ffc107",
+        "className": "",
+        "icon": "fa-lock",
+        "payload": "chiudi",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 140,
+        "y": 200,
+        "wires": [
+            [
+                "a1cc4c5f849e78ca"
+            ]
+        ]
+    },
+    {
+        "id": "1ee9956c973cb35b",
+        "type": "ui_button",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "grp_commands",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "ATTIVA ALLARME",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "#dc3545",
+        "className": "",
+        "icon": "fa-bell",
+        "payload": "allarme",
+        "payloadType": "str",
+        "topic": "caveau/commands",
+        "topicType": "msg",
+        "x": 150,
+        "y": 260,
+        "wires": [
+            [
+                "a1cc4c5f849e78ca"
+            ]
+        ]
+    },
+    {
+        "id": "a1cc4c5f849e78ca",
+        "type": "mqtt out",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Comandi Out",
+        "topic": "caveau/commands",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d31b82f67cf1457a",
+        "x": 480,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "09d9f6e5cecc0687",
+        "type": "mqtt in",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Status In",
+        "topic": "caveau/status",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 380,
+        "wires": [
+            [
+                "044987e09deb988a",
+                "b3cb7868f81f0378"
+            ]
+        ]
+    },
+    {
+        "id": "044987e09deb988a",
+        "type": "ui_text",
+        "z": "c7ccafe5abfad7f1",
+        "group": "grp_monitor",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Stato Attuale:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 24,
+        "color": "#1d70b8",
+        "x": 370,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "073ed7a04af60c2e",
+        "type": "mqtt in",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Events In",
+        "topic": "caveau/events",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 460,
+        "wires": [
+            [
+                "d81147842437702d",
+                "0e31175f42a89b14",
+                "ed43529f5e23c497",
+                "af919930696008fc"
+            ]
+        ]
+    },
+    {
+        "id": "d81147842437702d",
+        "type": "ui_toast",
+        "z": "c7ccafe5abfad7f1",
+        "position": "top right",
+        "displayTime": "4",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "Evento Rilevato",
+        "name": "",
+        "x": 390,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "b3cb7868f81f0378",
+        "type": "debug",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Stato",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "0e31175f42a89b14",
+        "type": "debug",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Evento",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "ed43529f5e23c497",
+        "type": "function",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Calcola Statistiche",
+        "func": "// Recupero le statistiche salvate o le inizializzo a 0\nvar stats = flow.get('caveau_stats') || {\n    access: 0,\n    error: 0,\n    alarm_door: 0,\n    alarm_vase: 0,\n    alarm_paint: 0,\n    alarm_total: 0\n};\n\n// Gestione Reset\nif (msg.topic === \"reset_stats\") {\n    stats = {\n        access: 0,\n        error: 0,\n        alarm_door: 0,\n        alarm_vase: 0,\n        alarm_paint: 0,\n        alarm_total: 0\n    };\n    flow.set('caveau_stats', stats);\n    // Resetta anche il log\n    flow.set('caveau_log', []);\n}\nelse {\n    // Logica aggiornamento standard\n    var evt = msg.payload.toString();\n\n    if(evt == \"accesso_consentito\") stats.access++;\n    else if(evt == \"codice_errato\") stats.error++;\n    else if(evt == \"allarme_porta\") { stats.alarm_door++; stats.alarm_total++; }\n    else if(evt == \"allarme_vaso\") { stats.alarm_vase++; stats.alarm_total++; }\n    else if(evt == \"allarme_quadro\") { stats.alarm_paint++; stats.alarm_total++; }\n    else if(evt == \"allarme_remoto\") { stats.alarm_total++; }\n    \n    flow.set('caveau_stats', stats);\n}\n\n// OUTPUTS\nvar msgAccess = { payload: stats.access };\nvar msgError = { payload: stats.error };\nvar msgAlarmTotal = { payload: stats.alarm_total };\nvar chartData = [\n    {\n        \"series\": [\"Eventi\"],\n        \"data\": [\n            [stats.alarm_door, stats.alarm_vase, stats.alarm_paint]\n        ],\n        \"labels\": [\"Porta\", \"Vaso\", \"Quadro\"]\n    }\n];\nvar msgChart = { payload: chartData };\n\n// Per il log reset, mando un segnale vuoto\nvar msgResetLog = (msg.topic === \"reset_stats\") ? { payload: [] } : null;\n\nreturn [msgAccess, msgError, msgAlarmTotal, msgChart, msgResetLog];",
+        "outputs": 5,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 660,
+        "wires": [
+            [
+                "27b9eaf4a2bb1235"
+            ],
+            [
+                "8160063094428ee4"
+            ],
+            [
+                "c364130b63aa0569"
+            ],
+            [
+                "3b192e33d19bc995"
+            ],
+            [
+                "af919930696008fc"
+            ]
+        ]
+    },
+    {
+        "id": "27b9eaf4a2bb1235",
+        "type": "ui_gauge",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "ea5eb03190fc5a8d",
+        "order": 1,
+        "width": "4",
+        "height": 0,
+        "gtype": "gage",
+        "title": "Accessi Consentiti",
+        "label": "ok",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "20",
+        "colors": [
+            "#b5e6b5",
+            "#55c455",
+            "#008000"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 670,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "8160063094428ee4",
+        "type": "ui_gauge",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "ea5eb03190fc5a8d",
+        "order": 2,
+        "width": "4",
+        "height": 0,
+        "gtype": "gage",
+        "title": "Codici Errati",
+        "label": "err",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "10",
+        "colors": [
+            "#e6b5b5",
+            "#d65555",
+            "#b30000"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 650,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "c364130b63aa0569",
+        "type": "ui_gauge",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "ea5eb03190fc5a8d",
+        "order": 3,
+        "width": "4",
+        "height": 0,
+        "gtype": "gage",
+        "title": "Totale Allarmi",
+        "label": "alert",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "20",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 650,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "3b192e33d19bc995",
+        "type": "ui_chart",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "ea5eb03190fc5a8d",
+        "order": 4,
+        "width": "12",
+        "height": 0,
+        "label": "Distribuzione Allarmi (Sensori)",
+        "chartType": "bar",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 710,
+        "y": 720,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c54ad5f42f6494e5",
+        "type": "ui_button",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "group": "ea5eb03190fc5a8d",
+        "order": 5,
+        "width": "4",
+        "height": 0,
+        "passthru": false,
+        "label": "RESET DATI",
+        "tooltip": "Azzera le statistiche e il log",
+        "color": "white",
+        "bgcolor": "black",
+        "className": "",
+        "icon": "fa-trash",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "reset_stats",
+        "topicType": "str",
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "ed43529f5e23c497"
+            ]
+        ]
+    },
+    {
+        "id": "c095f4b21ffe5935",
+        "type": "mqtt in",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Heartbeat In",
+        "topic": "caveau/heartbeat",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "d31b82f67cf1457a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 540,
+        "wires": [
+            [
+                "d7f81569db5acf2a",
+                "01accb721337cda2"
+            ]
+        ]
+    },
+    {
+        "id": "d7f81569db5acf2a",
+        "type": "trigger",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Watchdog (45s)",
+        "op1": "",
+        "op2": "OFFLINE ⚠️",
+        "op1type": "nul",
+        "op2type": "str",
+        "duration": "45",
+        "extend": true,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 340,
+        "y": 560,
+        "wires": [
+            [
+                "9a5ed42d6cccc569"
+            ]
+        ]
+    },
+    {
+        "id": "01accb721337cda2",
+        "type": "change",
+        "z": "c7ccafe5abfad7f1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ONLINE 🟢",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 520,
+        "wires": [
+            [
+                "9a5ed42d6cccc569"
+            ]
+        ]
+    },
+    {
+        "id": "9a5ed42d6cccc569",
+        "type": "ui_text",
+        "z": "c7ccafe5abfad7f1",
+        "group": "grp_monitor",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Connessione:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#777777",
+        "x": 540,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "af919930696008fc",
+        "type": "function",
+        "z": "c7ccafe5abfad7f1",
+        "name": "Costruisci Log",
+        "func": "var logs = flow.get('caveau_log') || [];\n\n// Se arriva un comando di reset (payload vuoto da stats logic)\nif (Array.isArray(msg.payload) && msg.payload.length === 0) {\n    logs = [];\n    flow.set('caveau_log', logs);\n    return { payload: logs };\n}\n\n// Altrimenti è un nuovo evento\nvar now = new Date();\nvar timeStr = now.toLocaleTimeString('it-IT');\nvar eventStr = msg.payload.toString();\n\n// Aggiungi in testa\nlogs.unshift({ time: timeStr, event: eventStr });\n\n// Tieni solo gli ultimi 10\nif (logs.length > 10) logs = logs.slice(0, 10);\n\nflow.set('caveau_log', logs);\nreturn { payload: logs };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 760,
+        "wires": [
+            [
+                "671e7e7e32466045"
+            ]
+        ]
+    },
+    {
+        "id": "671e7e7e32466045",
+        "type": "ui_template",
+        "z": "c7ccafe5abfad7f1",
+        "group": "grp_monitor",
+        "name": "Tabella Log",
+        "order": 3,
+        "width": "6",
+        "height": "6",
+        "format": "<div>\n    <h4>Ultime Attività</h4>\n    <ul style=\"list-style-type: none; padding: 0;\">\n        <li ng-repeat=\"x in msg.payload track by $index\" \n            style=\"border-bottom: 1px solid #ccc; padding: 5px 0;\">\n            <span style=\"color: #888; font-size: 0.8em;\">{{x.time}}</span> - \n            <b>{{x.event}}</b>\n        </li>\n    </ul>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 650,
+        "y": 760,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "grp_commands",
+        "type": "ui_group",
+        "name": "Comandi",
+        "tab": "tab_ui_caveau",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d31b82f67cf1457a",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "mosquitto",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "grp_monitor",
+        "type": "ui_group",
+        "name": "Monitoraggio",
+        "tab": "tab_ui_caveau",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ea5eb03190fc5a8d",
+        "type": "ui_group",
+        "name": "Statistiche & Report",
+        "tab": "tab_ui_caveau",
+        "order": 6,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "tab_ui_caveau",
+        "type": "ui_tab",
+        "name": "Caveau",
+        "icon": "dashboard",
+        "order": 4,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "ffc7c030b04fd204",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
