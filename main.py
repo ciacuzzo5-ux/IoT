@@ -43,7 +43,7 @@ reset_button = Pin(RESET_BUTTON_PIN, Pin.IN, Pin.PULL_UP)
 kp = Keypad(ROWS_PINS, COLS_PINS)
 tcrt_sensor = TCRT5000(pin=TCRT_PIN, invert=True)
 
-# OLED (Inizializzazione con la tua classe)
+# OLED
 i2c = SoftI2C(scl=Pin(I2C_SCL), sda=Pin(I2C_SDA), freq=100000)
 oled = OLED(OLED_WIDTH, OLED_HEIGHT, i2c) 
 
@@ -54,47 +54,49 @@ sensor_active = True
 # KY003
 door_sensor = KY003(KY003_PIN)
 
+
 # 2. FUNZIONI DI SUPPORTO
 
-
+# Funzione per aprire/chiudere la porta
 def servo_angle(angle):
     duty = int((angle / 180) * 102 + 26)
     servo.duty(duty)
-    
+ 
+# Funzione per far lampeggiare il led
 def led_blink(led, interval=0.2):
     led.value(1); time.sleep(interval); led.value(0); time.sleep(interval)
 
+# Funzione per il RESET
 def system_reset():
-    # Reset sistema con avviso su OLED e spegnimento LED 
+    # Invia il messaggio MQTT prima del reset
+    mqtt_client.publish(MQTT_TOPIC_EVENTS, b"reset_fisico_bottone")
+    mqtt_client.publish(MQTT_TOPIC_STATUS, b"resetting")
+    
+    # Reset hardware e spegnimento LED
     led_red.value(0); led_green.value(0); led_blue.value(0)
     servo_angle(0)
     
     # Animazione loop (faccio 8 passaggi, circa 3-4 secondi totali)
     for i in range(8):
-        dots = i % 4  # Risultato: 0, 1, 2, 3, 0, 1...
+        dots = i % 4
         if oled:
-            # Crea la stringa dinamica: "Riavvio", "Riavvio.", "Riavvio..", "Riavvio..."
             oled.show("RESET SISTEMA!", f"Riavvio{'.' * dots}")
         
-        # Velocità dell'animazione
         time.sleep(0.4)
 
     # Esegue il reset hardware
     machine.reset()
 
+# Funzione per attivare l'allarme
 def activate_alarm(reason):
     # Sequenza allarme 
     led_red.value(1)
     oled.show("ALLARME!!!", reason)
     
-    # Sirena
+    # Suona la sirena
+    # Questa funzione è "bloccante". Il programma rimarrà qui
+    # per 3000ms (3 secondi) mentre suona, e poi spegnerà il buzzer da solo.
     buzzer.play_continuous_siren(3000)
-    
-    # Attende 2 secondi mentre l'allarme suona
-    time.sleep(2)
-    
-    # Ferma il buzzer (assumendo esista un metodo stop())
-    buzzer.duty(0)
     
     # Ripristina lo stato iniziale
     led_red.value(0)
@@ -143,18 +145,27 @@ def connect_wifi(timeout=20):
     print(f"CONNESSO! IP: {ip_address}")
     
     led_blue.value(1) # LED fisso acceso
-    oled.show("Wi-Fi OK!", "Connessione riuscita.") 
+    oled.show("CONNESSIONE", "RIUSCITA!") 
     time.sleep(3) 
     
     return wlan
 
+
 def mqtt_connect():
-    client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER)
+    client = MQTTClient(MQTT_CLIENT_ID, MQTT_BROKER, keepalive=15)
+    
+    # Definiamo il Last Will and Testament PRIMA della connessione
+    client.set_last_will(b"caveau/connection", b"OFFLINE", retain=True, qos=1)
+    
     client.set_callback(mqtt_on_message)
     client.connect()
+    
+    # Appena connesso, dichiaro di essere ONLINE sullo STESSO topic del testamento
+    client.publish(b"caveau/connection", b"ONLINE", retain=True, qos=1)
+    
     client.subscribe(MQTT_TOPIC_COMMAND)
-    oled.show("MQTT connesso", "al broker")
     return client
+
 
 def mqtt_on_message(topic, msg):
     global sensor_active
@@ -171,7 +182,7 @@ def mqtt_on_message(topic, msg):
             
             led_green.value(1); led_red.value(0)
             
-            oled.show("REMOTO", "APERTA")
+            oled.show("APERTURA", "DA REMOTO")
             buzzer.beep_ok()
             
             mqtt_client.publish(MQTT_TOPIC_STATUS, b"aperta")
@@ -183,7 +194,7 @@ def mqtt_on_message(topic, msg):
             
             led_green.value(0); led_red.value(0); led_blue.value(0)
             
-            oled.show("REMOTO", "CHIUSA")
+            oled.show("CHIUSURA", "DA REMOTO")
             buzzer.beep_ok()
             
             mqtt_client.publish(MQTT_TOPIC_STATUS, b"chiusa")
@@ -213,6 +224,7 @@ if __name__ == "__main__":
 
     # 2. MQTT
     mqtt_client = mqtt_connect()
+    mqtt_client.publish(b"caveau/connection", b"ONLINE", retain=True)
     mqtt_client.publish(MQTT_TOPIC_STATUS, b"online")
     
     # 3. Setup MPU
@@ -263,8 +275,8 @@ if __name__ == "__main__":
 
             # 1. Controllo VASO (Accelerometro)
             if mpu and mpu.is_tampered(threshold=SOGLIA_SCASSO):
-                trigger_reason = "VASO MOSSO!"
-                trigger_event = b"allarme_vaso"
+                trigger_reason = "STATUA MOSSA!"
+                trigger_event = b"allarme_statua"
             
             # 2. Controllo QUADRO (Sensore IR)
             elif tcrt_sensor.is_background():
@@ -346,7 +358,7 @@ if __name__ == "__main__":
                         mqtt_client.publish(MQTT_TOPIC_STATUS, b"allarme")
                         
                         for i in range(BLOCK_TIME, 0, -1):
-                            oled.show("BLOCCATO!", f"Attendi {i}s")
+                            oled.show("CAVEAU BLOCCATO!", f"Attendi {i}s")
                             led_red.value(not led_red.value()) 
                             buzzer.beep_error()
                             time.sleep(0.5)
