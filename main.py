@@ -19,7 +19,8 @@ from boot import (
     SECRET_CODE, MAX_ATTEMPTS, BLOCK_TIME, SOGLIA_SCASSO,
     LED_RED_PIN, LED_GREEN_PIN, LED_BLUE_PIN, BUZZER_PIN,
     SERVO_PIN, RESET_BUTTON_PIN, TCRT_PIN, KY003_PIN, I2C_SDA, I2C_SCL,
-    OLED_WIDTH, OLED_HEIGHT, ROWS_PINS, COLS_PINS
+    OLED_WIDTH, OLED_HEIGHT, ROWS_PINS, COLS_PINS,
+    LOGO_PROGETTO, LOGO_WIFI, LOGO_LUCCHETTO_APERTO, LOGO_LUCCHETTO_CHIUSO, LOGO_ALLARME
 )
 
 #------------------------------------------------------------------------
@@ -87,6 +88,7 @@ def system_reset():
             oled.show("RESET SISTEMA!", f"Riavvio{'.' * dots}")
         
         time.sleep(0.4)
+    time.sleep(0.5)
     # Esegue il reset hardware: riavvia completamente il microcontrollore
     machine.reset()
 
@@ -97,6 +99,7 @@ def activate_alarm(reason):
     # Si accende il led rosso, si chiude la porta in automatico e scatta la sirena
     led_red.value(1)
     servo_angle(0)
+    oled.show_logo(LOGO_ALLARME, 1)
     oled.show("!!!ALLARME!!!", reason)
     buzzer.play_continuous_siren(3000) # Questa funzione è "bloccante". Dopo 3 secondi il buzzer si spegne da solo.
     # Ripristino dello stato iniziale: la porta rimane chiusa
@@ -118,7 +121,7 @@ def connect_wifi(timeout=20):
     wlan.active(True)
 
     print(f"Tentativo connessione a: {WIFI_NAME}")
-    oled.show("Connessione...", "Attendere...")
+    oled.show_status(LOGO_WIFI, "Avvio Wi-Fi!")
     
     # Avvia la connessione
     wlan.connect(WIFI_NAME, WIFI_PASSWORD)
@@ -140,7 +143,7 @@ def connect_wifi(timeout=20):
         # Controllo timeout: se impiega troppo tempo la connessione fallisce
         if time.time() - start > timeout:
             print("Errore: Timeout connessione Wi-Fi")
-            oled.show("Connessione fallita!", "Riprovo...")
+            oled.show("CONNESSIONE", "FALLITA!")
             return None
     
     # Connessione riuscita
@@ -239,7 +242,7 @@ if __name__ == "__main__":
     # 1. Rete
     wlan = connect_wifi()
     if not wlan:
-        oled.show("Wi-Fi OUT!", "Riavvio...")
+        oled.show("Connessione fallita!", "Riavvio...")
         time.sleep(2); machine.reset()
 
     # 2. MQTT
@@ -264,7 +267,7 @@ if __name__ == "__main__":
     sensor_active = True
     
     # Intro Schermo
-    oled.show_logo()
+    oled.show_logo(LOGO_PROGETTO)
     
     oled.show("Gruppo 11", "Nome progetto")
     time.sleep(2)
@@ -342,19 +345,21 @@ if __name__ == "__main__":
                     sensor_active = False 
                     led_green.value(1)
                     buzzer.beep_ok()
-                    oled.show("ACCESSO", "CONSENTITO")
+                    oled.show_status(LOGO_LUCCHETTO_APERTO, "CODICE VALIDO!")
                     # Messaggi inviati via MQTT
                     mqtt_client.publish(MQTT_TOPIC_EVENTS, b"accesso_consentito")
                     mqtt_client.publish(MQTT_TOPIC_STATUS, b"accesso_autorizzato")
                     # La porta si apre per 10 secondi
                     servo_angle(90)
                     # Viene mostrato sull'OLED il tempo rimanente
-                    oled.countdown("PORTA APERTA", 10)
+                    oled.countdown("PORTA APERTA:", 10)
                     # La porta si chiude in automatico
                     servo_angle(0)
                     # Il led si spegne
                     led_green.value(0)
                     oled.show("PORTA", "CHIUSA")
+                    oled.show("CAVEAU", "PROTETTO")
+                    oled.show_logo(LOGO_LUCCHETTO_CHIUSO, 1)
                     # Si torna nello stato protetto
                     mqtt_client.publish(MQTT_TOPIC_STATUS, b"caveau_protetto")
                     # Ripristino del codice
@@ -385,12 +390,18 @@ if __name__ == "__main__":
                         mqtt_client.publish(MQTT_TOPIC_EVENTS, b"caveau_bloccato")
                         mqtt_client.publish(MQTT_TOPIC_STATUS, b"allarme_attivo")
                         
+                        # Mostro il messaggio sull'OLED
+                        oled.show_status(LOGO_LUCCHETTO_CHIUSO, "BLOCCATO!")
+                        
                         # Si mostra sull'OLED il tempo rimanente in cui il sistema è bloccato
                         for i in range(BLOCK_TIME, 0, -1):
                             oled.show("CAVEAU BLOCCATO!", f"Attendi {i}s")
-                            led_red.value(not led_red.value()) 
-                            buzzer.beep_error()
+                            # Lampeggio e suono
+                            led_red.value(1); buzzer.beep_error()
                             time.sleep(0.5)
+                            led_red.value(0)
+                            time.sleep(0.5) # Ora il ciclo dura esattamente 1 secondo
+                            
                         # Una volta che il sistema è sbloccato si può inserire di nuovo il codice
                         attempts = MAX_ATTEMPTS; entered = ""; sensor_active = True
                         mqtt_client.publish(MQTT_TOPIC_STATUS, b"caveau_protetto")
