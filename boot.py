@@ -28,18 +28,12 @@ MQTT_TOPIC_EVENTS = b"caveau/events"
 MQTT_TOPIC_COMMAND = b"caveau/commands"
 
 # 4) COSTANTI DEL PROGETTO (SENZA LOGICA)
-SECRET_CODE = "2000"
+SECRET_CODE = "2004"
 MAX_ATTEMPTS = 3
 BLOCK_TIME = 10
 SOGLIA_SCASSO = 0.15 # Sensibilità MPU
 # Uso della costante matematica pi greco
 PI = math.pi
-
-# Stato del caveau
-STATE_ARMED = 0          # sensori attivi
-STATE_UNLOCKED = 1       # codice corretto → porta aperta
-STATE_ALARM = 2          # allarme attivo
-
 
 # 5) PIN HARDWARE (SOLO DEFINIZIONE)
 # LED
@@ -62,7 +56,7 @@ TCRT_PIN       = 34
 # SENSORE MAGNETICO KY003
 KY003_PIN = 35
 
-# PIN E HARDWARE 
+# PROTOCOLLO I2C: OLED + MPU6050 
 I2C_SDA = 21
 I2C_SCL = 22
 OLED_WIDTH = 128

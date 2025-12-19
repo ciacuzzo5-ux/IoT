@@ -39,3 +39,7 @@ class BUZZER:
             x += 1
             
         self.pwm.duty_u16(0) # Spegni alla fine
+    
+    # Funzione per spegnere il buzzer
+    def stop(self):
+        self.pwm.duty_u16(0) # Imposta il volume a zero
